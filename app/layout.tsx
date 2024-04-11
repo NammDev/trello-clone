@@ -11,19 +11,19 @@ export const viewport: Viewport = {
   themeColor: '#171717',
 }
 
-// export const metadata: Metadata = {
-//   title: {
-//     default: siteConfig.name,
-//     template: `%s | ${siteConfig.name}`,
-//   },
-//   description: siteConfig.description,
-//   keywords: siteConfig.keywords,
-//   manifest: '/manifest.json',
-//   authors: {
-//     name: 'Sanidhya Kumar Verma',
-//     url: 'https://github.com/sanidhyy',
-//   },
-// }
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  manifest: '/manifest.json',
+  authors: {
+    name: 'Namm Dev',
+    url: 'https://github.com/NammDev',
+  },
+}
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
