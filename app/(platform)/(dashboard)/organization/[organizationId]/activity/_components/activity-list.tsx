@@ -1,28 +1,28 @@
-import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs";
+import { redirect } from 'next/navigation'
+import { auth } from '@clerk/nextjs'
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton'
 
-import { ActivityItem } from "@/components/activity-item";
-import { db } from "@/lib/db";
+import { db } from '@/lib/db'
+import { ActivityItem } from '@/components/app-ui/activity-item'
 
 export const ActivityList = async () => {
-  const { orgId } = auth();
+  const { orgId } = auth()
 
-  if (!orgId) return redirect("/select-org");
+  if (!orgId) return redirect('/select-org')
 
   const auditLogs = await db.auditLog.findMany({
     where: {
       orgId,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
-  });
+  })
 
   return (
-    <ol className="space-y-4 mt-4">
-      <p className="hidden last:block text-xs text-center text-muted-foreground">
+    <ol className='space-y-4 mt-4'>
+      <p className='hidden last:block text-xs text-center text-muted-foreground'>
         No activity found inside this organization.
       </p>
 
@@ -30,17 +30,17 @@ export const ActivityList = async () => {
         <ActivityItem key={log.id} data={log} />
       ))}
     </ol>
-  );
-};
+  )
+}
 
 ActivityList.Skeleton = function ActivityListSkeleton() {
   return (
-    <ol className="space-y-4 mt-4">
-      <Skeleton className="w-[80%] h-14" />
-      <Skeleton className="w-[50%] h-14" />
-      <Skeleton className="w-[70%] h-14" />
-      <Skeleton className="w-[80%] h-14" />
-      <Skeleton className="w-[75%] h-14" />
+    <ol className='space-y-4 mt-4'>
+      <Skeleton className='w-[80%] h-14' />
+      <Skeleton className='w-[50%] h-14' />
+      <Skeleton className='w-[70%] h-14' />
+      <Skeleton className='w-[80%] h-14' />
+      <Skeleton className='w-[75%] h-14' />
     </ol>
-  );
-};
+  )
+}

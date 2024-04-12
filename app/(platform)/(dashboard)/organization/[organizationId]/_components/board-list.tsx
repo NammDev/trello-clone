@@ -5,19 +5,27 @@ import { HelpCircle, User2 } from 'lucide-react'
 
 import { Skeleton } from '@/components/ui/skeleton'
 
-// import { FormPopover } from '@/components/form/form-popover'
+import { FormPopover } from '@/components/form/form-popover'
+import { db } from '@/lib/db'
 import { MAX_FREE_BOARDS } from '@/constants/boards'
 import { checkSubscription } from '@/lib/subscription'
-import { getBoardsByOrgId } from '@/lib/actions/boards'
+import { getAvailableCount } from '@/lib/org-limit'
 import { Hint } from '@/components/app-ui/hint'
-import { getAvailableCount } from '@/lib/actions/org-limit'
 
 export const BoardList = async () => {
   const { orgId } = auth()
 
   if (!orgId) return redirect('/select-org')
 
-  const boards = await getBoardsByOrgId(orgId)
+  const boards = await db.board.findMany({
+    where: {
+      orgId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+
   const availableCount = await getAvailableCount()
   const isPro = await checkSubscription()
 
@@ -45,22 +53,22 @@ export const BoardList = async () => {
             <p className='relative font-semibold text-white'>{board.title}</p>
           </Link>
         ))}
-        {/* <FormPopover sideOffset={10} side='right'> */}
-        <div
-          role='button'
-          className='relative aspect-video h-full w-full bg-muted rounded-sm flex flex-col gap-y-1 items-center justify-center hover:opacity-75 transition'
-        >
-          <p className='text-sm'>Create new board</p>
-          <span className='text-xs'>{isPro ? 'Unlimited' : `${remainingBoards} remaining`}</span>
-          <Hint
-            align='start'
-            sideOffset={1}
-            description={`Free workspaces can have upto 5 open boards. For unlimited boards, please upgrade this workspace.`}
+        <FormPopover sideOffset={10} side='right'>
+          <div
+            role='button'
+            className='relative aspect-video h-full w-full bg-muted rounded-sm flex flex-col gap-y-1 items-center justify-center hover:opacity-75 transition'
           >
-            <HelpCircle className='absolute bottom-2 right-2 h-[14px] w-[14px]' />
-          </Hint>
-        </div>
-        {/* </FormPopover> */}
+            <p className='text-sm'>Create new board</p>
+            <span className='text-xs'>{isPro ? 'Unlimited' : `${remainingBoards} remaining`}</span>
+            <Hint
+              align='start'
+              sideOffset={1}
+              description={`Free workspaces can have upto 5 open boards. For unlimited boards, please upgrade this workspace.`}
+            >
+              <HelpCircle className='absolute bottom-2 right-2 h-[14px] w-[14px]' />
+            </Hint>
+          </div>
+        </FormPopover>
       </div>
     </div>
   )

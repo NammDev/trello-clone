@@ -13,7 +13,7 @@ import { FormSubmit } from '@/components/form/form-submit'
 import { FormPicker } from '@/components/form/form-picker'
 import { useAction } from '@/hooks/use-action'
 import { useProModal } from '@/hooks/use-pro-modal'
-import { createBoard } from '@/lib/actions/boards'
+import { createBoard } from '@/actions/create-board'
 
 type FormPopoverProps = {
   children: React.ReactNode

@@ -13,10 +13,9 @@ const ActivityPage = async () => {
     <div className='w-full'>
       <Info isPro={isPro} />
       <Separator className='my-2' />
-      {/* <Suspense fallback={<ActivityList.Skeleton />}>
+      <Suspense fallback={<ActivityList.Skeleton />}>
         <ActivityList />
-      </Suspense> */}
-      <p>Activity List</p>
+      </Suspense>
     </div>
   )
 }

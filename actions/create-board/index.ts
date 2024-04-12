@@ -1,31 +1,18 @@
-import { Board } from '@prisma/client'
-import { db } from '../db'
-import { z } from 'zod'
-import { auth } from '@clerk/nextjs'
-import { hasAvailableCount, increaseAvailableCount } from './org-limit'
+'use server'
+
 import { revalidatePath } from 'next/cache'
-import { checkSubscription } from '../subscription'
+import { auth } from '@clerk/nextjs'
 
-const CreateBoard = z.object({
-  title: z
-    .string({
-      required_error: 'Title is required.',
-      invalid_type_error: 'Title is required.',
-    })
-    .min(3, {
-      message: 'Title is too short.',
-    }),
-  image: z.string({
-    required_error: 'Image is required.',
-    invalid_type_error: 'Image is required.',
-  }),
-})
+import { db } from '@/lib/db'
+import { createSafeAction } from '@/lib/create-safe-action'
+import { InputType, ReturnType } from '@/actions/create-board/types'
+import { CreateBoard } from '@/actions/create-board/schema'
+import { createAuditLog } from '@/lib/create-audit-log'
+import { ACTION, ENTITY_TYPE } from '@prisma/client'
+import { increaseAvailableCount, hasAvailableCount } from '@/lib/org-limit'
+import { checkSubscription } from '@/lib/subscription'
 
-type CreateBoardType = z.infer<typeof CreateBoard>
-
-export async function createBoard(
-  data: CreateBoardType
-): Promise<{ data?: Board; error?: string }> {
+const handler = async (data: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth()
 
   if (!userId || !orgId) {
@@ -88,14 +75,4 @@ export async function createBoard(
   return { data: board }
 }
 
-export async function getBoardsByOrgId(orgId: string) {
-  const boards = await db.board.findMany({
-    where: {
-      orgId,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  })
-  return boards
-}
+export const createBoard = createSafeAction(CreateBoard, handler)
