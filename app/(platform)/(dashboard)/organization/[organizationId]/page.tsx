@@ -1,17 +1,28 @@
-import { OrganizationSwitcher, auth } from '@clerk/nextjs'
+import { Suspense } from 'react'
 
-const OrganizationIdPage = async ({
-  params,
-}: {
-  params: {
-    organizationId: string
-  }
-}) => {
-  const { userId, orgId } = auth()
+import { Separator } from '@/components/ui/separator'
 
-  if (orgId !== params.organizationId) return <div>Not Found</div>
+import { Info } from './_components/info'
+// import { BoardList } from './_components/board-list'
+import { checkSubscription } from '@/lib/subscription'
 
-  return <div className='w-full mb-20'>OrganizationIdPage: {orgId}</div>
+const OrganizationIdPage = async () => {
+  const isPro = await checkSubscription()
+
+  return (
+    <div className='w-full mb-20'>
+      <Info isPro={isPro} />
+
+      <Separator className='my-4' />
+
+      <div className='px-2 md:px-4'>
+        {/* <Suspense fallback={<BoardList.Skeleton />}>
+          <BoardList />
+        </Suspense> */}
+        <p>BoardList</p>
+      </div>
+    </div>
+  )
 }
 
 export default OrganizationIdPage
