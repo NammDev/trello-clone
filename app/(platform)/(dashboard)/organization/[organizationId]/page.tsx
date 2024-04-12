@@ -5,11 +5,7 @@ const OrganizationIdPage = async () => {
 
   if (!orgId) return false
 
-  return (
-    <div className='w-full mb-20'>
-      <OrganizationSwitcher hidePersonal />
-    </div>
-  )
+  return <div className='w-full mb-20'>OrganizationIdPage: {orgId}</div>
 }
 
 export default OrganizationIdPage
